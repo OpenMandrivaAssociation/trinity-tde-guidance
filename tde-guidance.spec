@@ -5,9 +5,9 @@
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
-%define tde_version 14.1.4
+%define tde_version 14.1.5
 %endif
-%define pkg_rel 2
+%define pkg_rel 1
 
 %define tde_pkg tde-guidance
 %define tde_prefix /opt/trinity
