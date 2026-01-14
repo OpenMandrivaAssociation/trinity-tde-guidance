@@ -7,7 +7,7 @@
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.4
 %endif
-%define pkg_rel 1
+%define pkg_rel 2
 
 %define tde_pkg tde-guidance
 %define tde_prefix /opt/trinity
@@ -99,12 +99,13 @@ BuildRequires:	xscreensaver-gl
 BuildRequires:	pkgconfig(python)
 BuildRequires:	%{python}-setuptools
 
+BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(xrender)
+
 Requires:		pytqt
 Requires:		trinity-pytde
 Requires:		trinity-pytdeextensions
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 Requires:		hwdata
-%endif
 
 Requires:		%{name}-backends = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -136,7 +137,6 @@ or can be run as standalone applications.
 %{tde_prefix}/share/apps/guidance/
 %{tde_prefix}/share/applications/tde/*.desktop
 %{tde_prefix}/share/icons/crystalsvg/*/*/*.png
-%if 0%{?mdkversion} || 0%{?pclinuxos} || 0%{?rhel} == 7 || 0%{?suse_version}
 %{python_sitelib}/tde-guidance/SMBShareSelectDialog.py*
 %{python_sitelib}/tde-guidance/SimpleCommandRunner.py*
 %{python_sitelib}/tde-guidance/fuser.py*
@@ -146,28 +146,6 @@ or can be run as standalone applications.
 %{python_sitelib}/tde-guidance/sizeview.py*
 %{python_sitelib}/tde-guidance/unixauthdb.py*
 %{python_sitelib}/tde-guidance/userconfig.py*
-%if 0%{?rhel} == 7
-%{python_sitelib}/tde-guidance/__pycache__/SMBShareSelectDialog.*.pyc
-%{python_sitelib}/tde-guidance/__pycache__/SimpleCommandRunner.*.pyc
-%{python_sitelib}/tde-guidance/__pycache__/fuser.*.pyc
-%{python_sitelib}/tde-guidance/__pycache__/fuser_ui.*.pyc
-%{python_sitelib}/tde-guidance/__pycache__/mountconfig.*.pyc
-%{python_sitelib}/tde-guidance/__pycache__/serviceconfig.*.pyc
-%{python_sitelib}/tde-guidance/__pycache__/sizeview.*.pyc
-%{python_sitelib}/tde-guidance/__pycache__/unixauthdb.*.pyc
-%{python_sitelib}/tde-guidance/__pycache__/userconfig.*.pyc
-%endif
-%else
-%pycached %{python_sitelib}/tde-guidance/SMBShareSelectDialog.py
-%pycached %{python_sitelib}/tde-guidance/SimpleCommandRunner.py
-%pycached %{python_sitelib}/tde-guidance/fuser.py
-%pycached %{python_sitelib}/tde-guidance/fuser_ui.py
-%pycached %{python_sitelib}/tde-guidance/mountconfig.py
-%pycached %{python_sitelib}/tde-guidance/serviceconfig.py
-%pycached %{python_sitelib}/tde-guidance/sizeview.py
-%pycached %{python_sitelib}/tde-guidance/unixauthdb.py
-%pycached %{python_sitelib}/tde-guidance/userconfig.py
-%endif
 
 # Files from powermanager
 %if %{with powermanager}
@@ -187,9 +165,7 @@ or can be run as standalone applications.
 %package backends
 Group:			Applications/Utilities
 Summary:		collection of system administration tools for GNU/Linux [Trinity]
-%if 0%{?rhel} || 0%{?fedora} || 0%{?mgaversion} || 0%{?mdkversion}
 Requires:		hwdata
-%endif
 Requires:		%{python}
 
 Obsoletes:		trinity-guidance-backends < %{?epoch:%{epoch}:}%{version}-%{release}
@@ -202,14 +178,8 @@ Guidance configuration tools.
 %files backends
 %defattr(-,root,root,-)
 %dir %{python_sitelib}/tde-guidance
-%if 0%{?mdkversion} || 0%{?pclinuxos} || 0%{?rhel} == 7 || 0%{?suse_version}
 %{python_sitelib}/tde-guidance/MicroHAL.py*
-%if 0%{?rhel} == 7
-%{python_sitelib}/tde-guidance/__pycache__/MicroHAL.*.pyc
-%endif
-%else
-%pycached %{python_sitelib}/tde-guidance/MicroHAL.py
-%endif
+
 
 ##########
 
@@ -236,7 +206,6 @@ suspend using HAL.
 %files powermanager
 %defattr(-,root,root,-)
 %{tde_prefix}/bin/guidance-power-manager
-%if 0%{?mdkver} ||0%{?pclinuxos} || 0%{?rhel} == 7 || 0%{?suse_version}
 %{python_sitelib}/tde-guidance/MicroHAL.py*
 %{python_sitelib}/tde-guidance/guidance-power-manager.py*
 %{python_sitelib}/tde-guidance/powermanage.py*
@@ -253,16 +222,6 @@ suspend using HAL.
 %{python_sitelib}/tde-guidance/__pycache__/guidance_power_manager_ui.*.pyc
 %{python_sitelib}/tde-guidance/__pycache__/notify.*.pyc
 %{python_sitelib}/tde-guidance/__pycache__/tooltip.*.pyc
-%else
-%pycached %{python_sitelib}/tde-guidance/MicroHAL.py
-%pycached %{python_sitelib}/tde-guidance/guidance-power-manager.py
-%pycached %{python_sitelib}/tde-guidance/powermanage.py
-%pycached %{python_sitelib}/tde-guidance/gpmhelper.py
-%pycached %{python_sitelib}/tde-guidance/powermanager_ui.py
-%pycached %{python_sitelib}/tde-guidance/guidance_power_manager_ui.py
-%pycached %{python_sitelib}/tde-guidance/notify.py
-%pycached %{python_sitelib}/tde-guidance/tooltip.py
-%endif
 %{tde_prefix}/share/icons/hicolor/22x22/apps/power-manager.png
 %{tde_prefix}/share/apps/guidance/pics/ac-adapter.png
 %{tde_prefix}/share/apps/guidance/pics/battery*.png
