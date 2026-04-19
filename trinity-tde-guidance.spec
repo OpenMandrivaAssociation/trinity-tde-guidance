@@ -3,11 +3,9 @@
 %bcond powermanager 0
 
 # TDE variables
-%define tde_epoch 2
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
-%define pkg_rel 1
 
 %define tde_pkg tde-guidance
 %define tde_prefix /opt/trinity
@@ -26,9 +24,8 @@
 
 
 Name:		trinity-%{tde_pkg}
-Epoch:		%{tde_epoch}
 Version:	0.8.0svn20080103
-Release:	%{?tde_version}_%{?!preversion:%{pkg_rel}}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?tde_version:%{tde_version}_}2
 Summary:	A collection of system administration tools for Trinity
 Group:		Applications/Utilities
 URL:		http://www.simonzone.com/software/guidance
@@ -36,7 +33,7 @@ URL:		http://www.simonzone.com/software/guidance
 License:	GPLv2+
 
 
-Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/applications/settings/%{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}.tar.xz
+Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/applications/settings/%{tarball_name}-%{tde_version}.tar.xz
 Source1:		trinity-%{tde_pkg}-rpmlintrc
 
 BuildSystem:  cmake 
