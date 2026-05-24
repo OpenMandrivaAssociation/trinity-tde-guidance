@@ -3,29 +3,24 @@
 %bcond powermanager 0
 
 # TDE variables
-%if "%{?tde_version}" == ""
-%define tde_version 14.1.5
-%endif
-
 %define tde_pkg tde-guidance
 %define tde_prefix /opt/trinity
 
-
-%define __arch_install_post %{nil}
+%undefine __arch_install_post
 
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
 %define _disable_rebuild_configure 1
 
 # fixes error: Empty %files file …/debugsourcefiles.list
-%define _debugsource_template %{nil}
+%undefine _debugsource_template
 
 %define tarball_name %{tde_pkg}-trinity
 
 
 Name:		trinity-%{tde_pkg}
-Version:	0.8.0svn20080103
-Release:	%{?tde_version:%{tde_version}_}2
+Version:	14.1.6
+Release:	1
 Summary:	A collection of system administration tools for Trinity
 Group:		Applications/Utilities
 URL:		http://www.simonzone.com/software/guidance
@@ -33,7 +28,7 @@ URL:		http://www.simonzone.com/software/guidance
 License:	GPLv2+
 
 
-Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/applications/settings/%{tarball_name}-%{tde_version}.tar.xz
+Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/applications/settings/%{tarball_name}-%{version}.tar.xz
 Source1:		trinity-%{tde_pkg}-rpmlintrc
 
 BuildSystem:  cmake 
@@ -47,14 +42,24 @@ BuildOption:    -DBUILD_ALL=ON
 BuildOption:    -DWITH_ALL_OPTIONS=ON
 BuildOption:    -DWITH_GCC_VISIBILITY=%{!?with_clang:ON}%{?with_clang:OFF}
 
-BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
-BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	trinity-tdelibs-devel >= %{version}
+BuildRequires:	trinity-tdebase-devel >= %{version}
+BuildRequires:	trinity-tde-cmake >= %{version}
+BuildRequires:	trinity-pytdeextensions >= %{version}
+BuildRequires:	trinity-libpythonize0-devel >= %{version}
+BuildRequires:	trinity-pytde >= %{version}
+
+# SIP support
+BuildRequires:	sip4-tqt-devel >= %{version}
+Requires:		sip4-tqt >= %{version}
+
+# PYTHON-QT support
+BuildRequires:	pytqt-devel >= %{version}
+BuildRequires:	trinity-pytde-devel >= %{version}
+BuildRequires:	trinity-pytqt-tools >= %{version}
+
 BuildRequires:	desktop-file-utils
 
-BuildRequires:	trinity-tde-cmake >= %{tde_version}
-BuildRequires:	trinity-pytdeextensions
-BuildRequires:	trinity-libpythonize0-devel
-BuildRequires:	trinity-pytde
 BuildRequires:	chrpath
 
 BuildRequires:	libtool
@@ -64,21 +69,8 @@ BuildRequires:	libtool
 BuildRequires:	pkgconfig
 BuildRequires:	fdupes
 
-# SIP support
-BuildRequires:	sip4-tqt-devel >= 4.10.5
-Requires:		sip4-tqt >= 4.10.5
-
-# PYTHON-QT support
-BuildRequires:	pytqt-devel
-BuildRequires:	trinity-pytde-devel
-BuildRequires:	trinity-pytqt-tools
 
 # XSCREENSAVER support
-#  RHEL 4: disabled
-#  RHEL 6: available in EPEL
-#  RHEL 7: available in NUX
-#  RHEL 8: available in EPEL
-#  RHEL 9: available in EPEL
 %if %{with xscreensaver}
 BuildRequires:  pkgconfig(xscrnsaver)
 BuildRequires:	xscreensaver
@@ -104,14 +96,14 @@ Requires:		trinity-pytde
 Requires:		trinity-pytdeextensions
 Requires:		hwdata
 
-Requires:		%{name}-backends = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:		%{name}-backends = %{EVRD}
 
 # POWERMANAGER support (requires HAL)
 #define with_powermanager 1
-Obsoletes:	trinity-tde-guidance-powermanager < %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:	trinity-tde-guidance-powermanager < %{EVRD}
 
-Obsoletes:		trinity-guidance < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:		trinity-guidance = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:		trinity-guidance < %{EVRD}
+Provides:		trinity-guidance = %{EVRD}
 
 %description
 Guidance currently consists of four programs designed to help you
@@ -165,8 +157,8 @@ Summary:		collection of system administration tools for GNU/Linux [Trinity]
 Requires:		hwdata
 Requires:		%{python}
 
-Obsoletes:		trinity-guidance-backends < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:		trinity-guidance-backends = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:		trinity-guidance-backends < %{EVRD}
+Provides:		trinity-guidance-backends = %{EVRD}
 
 %description backends
 This package contains the platform neutral backends used in the
@@ -185,11 +177,11 @@ Guidance configuration tools.
 %package powermanager
 Group:			Applications/Utilities
 Summary:		HAL based power manager applet [Trinity]
-Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:		%{name} = %{EVRD}
 Requires:		hal
 
-Obsoletes:		trinity-guidance-powermanager < %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:		trinity-guidance-powermanager = %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:		trinity-guidance-powermanager < %{EVRD}
+Provides:		trinity-guidance-powermanager = %{EVRD}
 
 %if "%{tde_prefix}" == "/usr"
 Conflicts:	guidance-power-manager
